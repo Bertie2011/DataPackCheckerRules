@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text.Json;
 
 namespace Uniqueness {
+    /// <summary>
+    /// Written by Bertie2011
+    /// </summary>
     public class ResourceLocation : CheckerRule {
         public override string Title => "All data pack files must be in a subfolder with the same name.";
 
