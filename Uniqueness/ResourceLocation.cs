@@ -20,11 +20,13 @@ namespace Uniqueness {
         public override string BadExample => "data/<namespace>/functions/name.mcfunction\n\tdata/<namespace>/functions/MyDataPack/name.mcfunction AND data/<namespace>/predicates/SomethingElse/name.json";
 
         public override void Run(DataPack pack, JsonElement config, Output output) {
-            string subfolder = null;
-            Namespace subfolderNS = null;
-            Resource subfolderR = null;
             foreach (var ns in pack.Namespaces) {
                 if (ns.Name == "minecraft") continue;
+
+                string subfolder = null;
+                Namespace subfolderNS = null;
+                Resource subfolderR = null;
+
                 var resources = new List<Resource>()
                     .Concat(ns.Advancements)
                     .Concat(ns.DimensionData.Dimensions)
