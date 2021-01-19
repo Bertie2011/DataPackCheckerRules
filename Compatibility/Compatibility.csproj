@@ -4,4 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="Shared">
+      <HintPath>..\Shared.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
