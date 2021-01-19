@@ -46,7 +46,7 @@ The allowed prefixes/namespaces can be extended or overriden by supplying a conf
 
         public override void Run(DataPack pack, JsonElement? config, Output output) {
             if (!ValidateConfig(config)) {
-                output.Error(new InvalidDataException("Configuration is not valid, see '-i Uniqueness.Identifier'."));
+                output.InvalidConfiguration<Identifier>();
                 return;
             }
 

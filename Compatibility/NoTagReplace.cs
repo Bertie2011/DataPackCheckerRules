@@ -7,7 +7,7 @@ namespace Compatibility {
     public class NoTagReplace : CheckerRule {
         public override string Title => "Tags must not overwrite entries defined in lower priority data packs.";
 
-        public override string Description => "Setting replace to true in a tag can prevent other data packs from working correctly.";
+        public override string Description => "Setting 'replace' to true in a tag can prevent other data packs from working correctly.";
 
         public override string GoodExample => "{\"replace\":false,\"values\":[ ... ]}\n{\"values\":[ ... ]}";
 

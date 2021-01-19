@@ -31,7 +31,7 @@ Otherwise, the allowed subfolders can be extended or overriden by supplying a co
 
         public override void Run(DataPack pack, JsonElement? config, Output output) {
             if (!ValidateConfig(config)) {
-                output.Error(new InvalidDataException("Configuration is not valid, see '-i Uniqueness.ResourceLocation'."));
+                output.InvalidConfiguration<ResourceLocation>();
                 return;
             }
 
