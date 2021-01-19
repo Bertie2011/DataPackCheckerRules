@@ -13,7 +13,7 @@ namespace Uniqueness {
     public class ResourceLocation : CheckerRule {
         public override string Title => "All data pack files must be in a subfolder with the same name.";
 
-        public override string Description => "Assuming the namespace is author specific, putting all resources in subfolders will prevent clashes with other data packs of the same author.";
+        public override string Description => "Assuming the namespace is author specific, putting all resources in subfolders will prevent clashes with other data packs of the same author.\nThe minecraft namespace is not checked.";
 
         public override string GoodExample => "data/<namespace>/functions/MyDataPack/name.mcfunction AND data/<namespace>/predicates/MyDataPack/name.json\ndata/<namespace>/functions/MyDataPack/name.mcfunction AND data/<namespace>/predicates/MyDataPack/AnotherFolder/name.json";
 
@@ -39,7 +39,6 @@ Otherwise, the allowed subfolders can be extended or overriden by supplying a co
                 if (ns.Name == "minecraft") continue;
 
                 string subfolder = null;
-                Namespace subfolderNS = null;
                 Resource subfolderR = null;
 
                 var resources = new List<Resource>()
@@ -63,16 +62,19 @@ Otherwise, the allowed subfolders can be extended or overriden by supplying a co
 
                 foreach (var resource in resources) {
                     var path = resource.Path.Split('/', '\\')[0];
+                    if (string.IsNullOrWhiteSpace(resource.Path)) {
+                        output.Error(ns, resource, "Resource is not in a subfolder");
+                        continue;
+                    }
+
                     bool configMatch = config != null && config.Value.GetProperty("options").EnumerateArray().Any(v => v.GetString() == path);
                     bool append = config == null || config.Value.GetProperty("extend").GetBoolean();
 
-                    if (string.IsNullOrWhiteSpace(resource.Path)) output.Error(ns, resource, "Resource is not in a subfolder");
-                    else if (!FolderAllowed(path, subfolder, append, configMatch)) {
-                        if (subfolder != null) output.Error(ns, resource, $"Resource subfolder does not match {output.GetResourceIdentifier(subfolderNS, subfolderR)} or any of the ones in the config file.");
+                    if (!FolderAllowed(path, subfolder, append, configMatch)) {
+                        if (subfolder != null) output.Error(ns, resource, $"Resource subfolder does not match {output.GetResourceIdentifier(ns, subfolderR)} or any of the ones in the config file.");
                         else output.Error(ns, resource, $"Resource subfolder does not match any of the ones in the config file.");
                     } else if (subfolder == null && append && !configMatch) {
                         subfolder = path;
-                        subfolderNS = ns;
                         subfolderR = resource;
                     }
                 }
@@ -89,8 +91,8 @@ Otherwise, the allowed subfolders can be extended or overriden by supplying a co
         }
 
         private bool FolderAllowed(string path, string subfolder, bool append, bool configMatch) {
-            return (subfolder == null && (append || configMatch))
-                || (subfolder != null && (subfolder == path || configMatch));
+            return configMatch || (subfolder == null && append)
+                || (subfolder != null && subfolder == path);
         }
     }
 }
