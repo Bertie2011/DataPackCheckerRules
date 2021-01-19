@@ -5,5 +5,5 @@ View [the documentation](https://github.com/Bertie2011/DataPackChecker/blob/main
 
 ## Uniqueness.dll
 <details><summary><b>Uniqueness.ResourceLocation</b><blockquote>All data pack files must be in a subfolder with the same name.</blockquote></summary>
-Assuming the namespace is author specific, putting all resources in subfolders will prevent clashes with other data packs of the same author.
+Assuming the namespace is author specific, putting all resources in subfolders will prevent clashes with other data packs of the same author. By default each namespace can have its own subfolder, which can be extended or overridden by a list of names in the configuration.
 </details>
