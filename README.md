@@ -7,3 +7,16 @@ View [the documentation](https://github.com/Bertie2011/DataPackChecker/blob/main
 <details><summary><b>Uniqueness.ResourceLocation</b><blockquote>All data pack files must be in a subfolder with the same name.</blockquote></summary>
 Assuming the namespace is author specific, putting all resources in subfolders will prevent clashes with other data packs of the same author. By default each namespace can have its own subfolder, which can be extended or overridden by a list of names in the configuration.
 </details>
+<details><summary><b>Uniqueness.Identifier</b><blockquote>All in-game resources must have a prefixed identifier.</blockquote></summary>
+In-game resources like scoreboard objectives have to be prefixed to prevent clashes. Only 1 prefix per namespace is allowed and should be separated by any of these characters: . _ -<br>
+If a namespace is allowed, all resources must be prefixed by the namespace of the function.<br><br>
+
+Prefixed:
+- scoreboard objectives
+- tags
+- teams
+
+Namespaced:
+- bossbars
+- data storage
+</details>
