@@ -25,11 +25,11 @@ Namespaced:
 - bossbars
 - data storage";
 
-        public override string GoodExample => "data modify storage my_namespace:my_storage ...\nscoreboard objectives add myns_my_objective AND tag ... add myns_my_tag";
+        public override List<string> GoodExamples { get; } = new List<string>() { "data modify storage my_namespace:my_storage ...", "scoreboard objectives add myns_my_objective ...\ntag ... add myns_my_tag" };
 
-        public override string BadExample => "data modify storage my_storage ...\nscoreboard objectives add myObjective ...\nscoreboard objectives add abc_my_objective ... AND tag ... add xyz_my_tag";
+        public override List<string> BadExamples { get; } = new List<string>() { "data modify storage my_storage ...", "scoreboard objectives add myObjective ...", "scoreboard objectives add abc_my_objective ...\ntag ... add xyz_my_tag" };
 
-        public override string ConfigExample => @"Only one prefix per namespace is allowed without configuration.
+        public override List<string> ConfigExamples { get; } = new List<string>() { @"Only one prefix per namespace is allowed without configuration.
 For namespaced identifiers, the namespace must match that of the function.
 The allowed prefixes/namespaces can be extended or overriden by supplying a configuration like this:
 {
@@ -42,7 +42,7 @@ The allowed prefixes/namespaces can be extended or overriden by supplying a conf
         ""...""
     ],
     ""extend"": true
-}";
+}" };
 
         public override void Run(DataPack pack, JsonElement? config, Output output) {
             if (!ValidateConfig(config)) {

@@ -15,11 +15,11 @@ namespace Uniqueness {
 
         public override string Description => "Assuming the namespace is author specific, putting all resources in subfolders will prevent clashes with other data packs of the same author.\nThe minecraft namespace is not checked.";
 
-        public override string GoodExample => "data/<namespace>/functions/MyDataPack/name.mcfunction AND data/<namespace>/predicates/MyDataPack/name.json\ndata/<namespace>/functions/MyDataPack/name.mcfunction AND data/<namespace>/predicates/MyDataPack/AnotherFolder/name.json";
+        public override List<string> GoodExamples { get; } = new List<string>() { "data/<namespace>/functions/MyDataPack/name.mcfunction\ndata/<namespace>/predicates/MyDataPack/name.json", "data/<namespace>/functions/MyDataPack/name.mcfunction\ndata/<namespace>/predicates/MyDataPack/AnotherFolder/name.json" };
 
-        public override string BadExample => "data/<namespace>/functions/name.mcfunction\ndata/<namespace>/functions/MyDataPack/name.mcfunction AND data/<namespace>/predicates/SomethingElse/name.json";
+        public override List<string> BadExamples { get; } = new List<string>() { "data/<namespace>/functions/name.mcfunction", "data/<namespace>/functions/MyDataPack/name.mcfunction\ndata/<namespace>/predicates/SomethingElse/name.json" };
 
-        public override string ConfigExample => @"Only one subfolder name per namespace is allowed without configuration.
+        public override List<string> ConfigExamples { get; } = new List<string>() { @"Only one subfolder name per namespace is allowed without configuration.
 Otherwise, the allowed subfolders can be extended or overriden by supplying a configuration like this:
 {
     ""options"": [
@@ -27,7 +27,7 @@ Otherwise, the allowed subfolders can be extended or overriden by supplying a co
         ""...""
     ],
     ""extend"": true
-}";
+}" };
 
         public override void Run(DataPack pack, JsonElement? config, Output output) {
             if (!ValidateConfig(config)) {

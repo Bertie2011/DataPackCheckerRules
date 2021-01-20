@@ -1,6 +1,7 @@
 ﻿using DataPackChecker.Shared;
 using DataPackChecker.Shared.Data;
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 
 namespace Compatibility {
@@ -9,9 +10,9 @@ namespace Compatibility {
 
         public override string Description => "Setting 'replace' to true in a tag can prevent other data packs from working correctly.";
 
-        public override string GoodExample => "{\"replace\":false,\"values\":[ ... ]}\n{\"values\":[ ... ]}";
+        public override List<string> GoodExamples { get; } = new List<string>() { "{\"replace\":false,\"values\":[ ... ]}", "{\"values\":[ ... ]}" };
 
-        public override string BadExample => "{\"replace\":true,\"values\":[ ... ]}";
+        public override List<string> BadExamples { get; } = new List<string>() { "{\"replace\":true,\"values\":[ ... ]}" };
 
         public override void Run(DataPack pack, JsonElement? config, Output output) {
             foreach (var ns in pack.Namespaces) {

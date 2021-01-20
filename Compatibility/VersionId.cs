@@ -12,13 +12,13 @@ namespace Compatibility {
 
         public override string Description => "The version identifier 'pack_format' in pack.mcmeta has to match the number set in the configuration.";
 
-        public override string GoodExample => "Configuration number: 7 AND Data pack number: 7";
+        public override List<string> GoodExamples { get; } = new List<string>() { "Configuration number: 7\nData pack number: 7" };
 
-        public override string BadExample => "Configuration number: 7 AND Data pack number: 6";
+        public override List<string> BadExamples { get; } = new List<string>() { "Configuration number: 7\nData pack number: 6" };
 
-        public override string ConfigExample => @"{
+        public override List<string> ConfigExamples { get; } = new List<string>() { @"{
     ""version"": 7
-}";
+}" };
 
         public override void Run(DataPack pack, JsonElement? config, Output output) {
             if (config == null || config.Value.ValueKind != JsonValueKind.Object
