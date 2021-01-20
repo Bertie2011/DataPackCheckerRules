@@ -2,6 +2,7 @@
 using DataPackChecker.Shared.Data;
 using System;
 using System.Text.Json;
+using System.Linq;
 
 namespace Style {
     public class UninstallFunction : CheckerRule {
@@ -14,7 +15,9 @@ namespace Style {
         public override string BadExample => "Not having an uninstall function";
 
         public override void Run(DataPack pack, JsonElement? config, Output output) {
-            throw new NotImplementedException();
+            if (!pack.Namespaces.Any(ns => ns.Functions.Any(f => f.Name == "uninstall"))) {
+                output.Error("Data pack does not contain uninstall function.");
+            }
         }
     }
 }

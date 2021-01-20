@@ -29,7 +29,7 @@ namespace Compatibility {
                 var versionConfig = config.Value.GetProperty("version").GetInt32();
                 var versionPack = pack.Meta.GetProperty("pack").GetProperty("pack_format").GetInt32();
                 if (versionConfig != versionPack) {
-                    output.Error(new ArgumentException("The data pack version is not " + versionConfig));
+                    output.Error("The data pack version is not " + versionConfig);
                 }
             }
         }
