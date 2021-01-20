@@ -25,3 +25,6 @@ Assuming the namespace is author specific, putting all resources in subfolders w
 <details><summary><b>Compatibility.NoTagReplace</b><blockquote>Tags must not overwrite entries defined in lower priority data packs.</blockquote></summary>
 Setting 'replace' to true in a tag can prevent other data packs from working correctly.
 </details>
+<details><summary><b>Compatibility.VersionId</b><blockquote>The version identifier must be correct.</blockquote></summary>
+The version identifier 'pack_format' in pack.mcmeta has to match the number set in the configuration.
+</details>
