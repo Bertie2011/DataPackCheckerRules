@@ -61,8 +61,8 @@ Otherwise, the allowed subfolders can be extended or overriden by supplying a co
                     .Concat(ns.WorldGenData.TemplatePools);
 
                 foreach (var resource in resources) {
-                    var path = resource.Path.Split('/', '\\')[0];
-                    if (string.IsNullOrWhiteSpace(resource.Path)) {
+                    var path = resource.Identifier.Split('/', '\\')[0];
+                    if (string.IsNullOrWhiteSpace(resource.Identifier)) {
                         output.Error(ns, resource, "Resource is not in a subfolder");
                         continue;
                     }
