@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Style": {
+      "commandName": "Executable",
+      "executablePath": "..\\DPC\\DataPackChecker.exe",
+      "commandLineArgs": "-f ..\\Arguments.txt",
+      "workingDirectory": "..\\DPC"
+    }
+  }
+}
