@@ -3,6 +3,11 @@ This repository contains the source code and [releases](https://github.com/Berti
 
 View [the documentation](https://github.com/Bertie2011/DataPackChecker/blob/main/README.md) on how to start using the rules.
 
+## Blacklist.dll
+<details><summary><b>Blacklist.ResourceLocation</b><blockquote>Certain resource locations are blacklisted.</blockquote></summary>
+Some resource locations are blacklisted. Each resource file path (starting with 'data/') is matched against a list of regular expressions until one matches. Based on a +/- prefix, the file will be allowed or disallowed. If none of the expressions match, a decision is made based on the defaultAllow boolean. Use [^/]+ to allow any path element.
+</details>
+
 ## Compatibility.dll
 <details><summary><b>Compatibility.NoTagReplace</b><blockquote>Tags must not overwrite entries defined in lower priority data packs.</blockquote></summary>
 Setting 'replace' to true in a tag can prevent other data packs from working correctly.
