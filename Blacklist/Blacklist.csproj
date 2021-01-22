@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(TargetDir)\$(TargetName).dll&quot; &quot;..\DPC\Rules&quot; /Y /D /I" />
+  </Target>
+
+  <ItemGroup>
+    <Reference Include="Shared">
+      <HintPath>..\Shared.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

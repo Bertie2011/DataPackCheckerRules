@@ -10,7 +10,7 @@ namespace Style {
     public class AsAtComments : CheckerRule {
         public override string Title => "A function must start with comments describing the 'as/at' context.";
 
-        public override string Description => "In each function a certain context is assumed, which includes the meaning of @s, @p and ~ ~ ~. Writing down that context at the top of the function might save some time debugging and help out if the function is revisited in the future.\nSpacing within the lines is not checked.";
+        public override string Description => "In each function a certain context is assumed, which includes the meaning of @s, @p and ~ ~ ~. Writing down that context at the top of the function might save some time debugging and help out if the function is revisited in the future.";
 
         public override List<string> GoodExamples { get; } = new List<string>() { "# As: Some entity\n# At: Some place", "# As/At: Some entity" };
 
@@ -24,9 +24,9 @@ namespace Style {
                     for (int i = 0; i < Math.Min(f.Commands.Count, 2); i++) {
                         var c = f.Commands[i];
                         if (c.ContentType != Command.Type.Comment) continue;
-                        if (c.Raw.StartsWith("As:") && c.Raw.Length > 4) asComment = true;
-                        else if (c.Raw.StartsWith("At:") && c.Raw.Length > 4) atComment = true;
-                        else if ((c.Raw.StartsWith("As/At:") || c.Raw.StartsWith("At/As:")) && c.Raw.Length > 7) atComment = asComment = true;
+                        if (c.Raw.StartsWith("As:", true, null) && c.Raw.Length > 4) asComment = true;
+                        else if (c.Raw.StartsWith("At:", true, null) && c.Raw.Length > 4) atComment = true;
+                        else if ((c.Raw.StartsWith("As/At:", true, null) || c.Raw.StartsWith("At/As:", true, null)) && c.Raw.Length > 7) atComment = asComment = true;
                     }
 
                     if (!asComment || !atComment) {

@@ -41,26 +41,7 @@ Otherwise, the allowed subfolders can be extended or overriden by supplying a co
                 string subfolder = null;
                 Resource subfolderR = null;
 
-                var resources = new List<Resource>()
-                    .Concat(ns.Advancements)
-                    .Concat(ns.DimensionData.Dimensions)
-                    .Concat(ns.DimensionData.DimensionTypes)
-                    .Concat(ns.Functions)
-                    .Concat(ns.LootTables)
-                    .Concat(ns.Predicates)
-                    .Concat(ns.Recipes)
-                    .Concat(ns.Structures)
-                    .Concat(ns.Tags)
-                    .Concat(ns.WorldGenData.Biomes)
-                    .Concat(ns.WorldGenData.ConfiguredCarvers)
-                    .Concat(ns.WorldGenData.ConfiguredFeatures)
-                    .Concat(ns.WorldGenData.ConfiguredStructureFeatures)
-                    .Concat(ns.WorldGenData.ConfiguredSurfaceBuilders)
-                    .Concat(ns.WorldGenData.NoiseSettings)
-                    .Concat(ns.WorldGenData.ProcessorLists)
-                    .Concat(ns.WorldGenData.TemplatePools);
-
-                foreach (var resource in resources) {
+                foreach (var resource in ns.AllResources) {
                     var path = resource.Identifier.Split('/', '\\')[0];
                     if (string.IsNullOrWhiteSpace(resource.Identifier)) {
                         output.Error(ns, resource, "Resource is not in a subfolder");
