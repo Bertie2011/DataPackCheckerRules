@@ -19,7 +19,7 @@ namespace Core.Compatibility {
 
         public override void Run(DataPack pack, JsonElement? config, Output output) {
             foreach (var ns in pack.Namespaces) {
-                foreach (var tag in ns.Tags) {
+                foreach (var tag in ns.TagData.AllTags) {
                     if (tag.Content.TryGetProperty("replace", out JsonElement replace) && replace.GetBoolean()) {
                         output.Error(ns, tag, "Tag cannot replace contents of lower priority data packs, remove 'replace: true'.");
                     }
