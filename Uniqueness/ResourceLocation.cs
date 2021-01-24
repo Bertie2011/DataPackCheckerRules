@@ -24,7 +24,7 @@ Otherwise, the allowed subfolders can be extended or overriden by supplying a co
 {
     ""options"": [
         ""other subfolder"",
-        ""...""
+        ...
     ],
     ""extend"": true
 }" };

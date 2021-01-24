@@ -5,7 +5,7 @@ View [the documentation](https://github.com/Bertie2011/DataPackChecker/blob/main
 
 ## Blacklist.dll
 <details><summary><b>Blacklist.ResourceLocation</b><blockquote>Certain resource locations are blacklisted.</blockquote></summary>
-Some resource locations are blacklisted. Each resource file path (starting with 'data/') is matched against a list of regular expressions until one matches. Based on a +/- prefix, the file will be allowed or disallowed. If none of the expressions match, a decision is made based on the defaultAllow boolean. Use [^/]+ to allow any path element.
+Some resource locations are blacklisted. Each resource file path (starting with 'data/') is matched against a list of regular expressions until one matches. Based on a +/- prefix, the file will be allowed or disallowed. If none of the expressions match, the location is allowed. Use [^/]+ to allow any path element.
 </details>
 
 ## Compatibility.dll

@@ -35,11 +35,11 @@ The allowed prefixes/namespaces can be extended or overriden by supplying a conf
 {
     ""namespaces"": [
         ""other namespace"",
-        ""...""
+        ...
     ],
     ""prefixes"": [
         ""other prefix"",
-        ""...""
+        ...
     ],
     ""extend"": true
 }" };

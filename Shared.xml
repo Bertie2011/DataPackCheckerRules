@@ -4,6 +4,13 @@
         <name>Shared</name>
     </assembly>
     <members>
+        <member name="M:DataPackChecker.Shared.Data.DataPack.FindFunctions(System.String)">
+            <summary>
+            Find functions by namespaced identifier.
+            </summary>
+            <param name="identifier">A namespaced identifier, possibly prefixed by # to indicate a tag.<br>(#){namespace}:{path}/{name}</br></param>
+            <returns>All functions found by recursively parsing all tags.</returns>
+        </member>
         <member name="P:DataPackChecker.Shared.Data.Namespace.FolderPath">
             <summary>
             Relative to the datapack path. (data/{name})
@@ -59,9 +66,18 @@
             Returns all commands, including NextCommands (recursive).
             </summary>
         </member>
+        <member name="P:DataPackChecker.Shared.Data.Resources.Function.References">
+            <summary>
+            All Functions referenced by commands in this function.
+            This includes any functions listed in referenced tags. If referenced tags contain more tags, each
+            (indirectly) referenced tag is searched for more functions.
+            </summary>
+        </member>
         <member name="P:DataPackChecker.Shared.Data.Resources.Function.ReferencesFlat">
             <summary>
-            Return all uniquely referenced functions (recursive), including this one.
+            All referenced functions (recursive), including this one.
+            This means that any function that is (indirectly) referenced through function commands
+            or tags will be listed here.
             </summary>
         </member>
         <member name="P:DataPackChecker.Shared.Data.Resources.Function.CommandsFlatWithReferences">
@@ -80,6 +96,18 @@
             Same as Identifier
             </summary>
         </member>
+        <member name="P:DataPackChecker.Shared.Data.Resources.Tags.FunctionTag.References">
+            <summary>
+            A list of all functions referenced by this tag.
+            This is recursive for any tags listed in other tags.
+            </summary>
+        </member>
+        <member name="P:DataPackChecker.Shared.Data.Resources.Tags.Tag.Entries">
+            <summary>
+            A convenient list of entries in the tag. The Content property can be parsed too, but because
+            an entry can also be an object it is not as straight forward.
+            </summary>
+        </member>
         <member name="M:DataPackChecker.Shared.Output.Error(DataPackChecker.Shared.Data.Namespace,System.String)">
             <summary>
             This method does not provide the creator with enough information, please use a more specific method.<br/><br/>
@@ -93,7 +121,7 @@
             {resource type} {ns.Name}:{r.Path}/{r.Name}
             </summary>
         </member>
-        <member name="M:DataPackChecker.Shared.Output.Error(DataPackChecker.Shared.Data.Namespace,DataPackChecker.Shared.Data.Resources.Tag,System.String,System.String)">
+        <member name="M:DataPackChecker.Shared.Output.Error(DataPackChecker.Shared.Data.Namespace,DataPackChecker.Shared.Data.Resources.Tags.Tag,System.String,System.String)">
             <summary>
             Output header format:<br/>
             {type} Tag {ns.Name}:{t.Path}/{t.Name} - {item}
