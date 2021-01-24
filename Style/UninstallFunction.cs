@@ -5,7 +5,10 @@ using System.Text.Json;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Style {
+namespace Core.Style {
+    /// <summary>
+    /// Written by Bertie2011
+    /// </summary>
     public class UninstallFunction : CheckerRule {
         public override string Title => "There must be an uninstall function.";
 

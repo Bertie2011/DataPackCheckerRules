@@ -8,7 +8,10 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace Blacklist {
+namespace Core.Blacklist {
+    /// <summary>
+    /// Written by Bertie2011
+    /// </summary>
     public class ResourceLocation : CheckerRule {
         public override string Title => "Certain resource locations are blacklisted.";
 
@@ -23,7 +26,7 @@ namespace Blacklist {
 data/my_namespace/functions/abc/my_function.mcfunction
 data/my_namespace/predicates/my_predicate.json" };
 
-        public override List<string> BadExamples => new List<string> {@"<See configuration above>
+        public override List<string> BadExamples => new List<string> { @"<See configuration above>
 data/my_namespace/functions/my_function.mcfunction" };
 
         public override List<string> ConfigExamples => new List<string> { @"{
@@ -40,14 +43,14 @@ Otherwise if path matches regex C, allow (+ prefix).
 Otherwise allow." };
 
         public override void Run(DataPack pack, JsonElement? config, Output output) {
-            if(!ValidateConfig(config)) {
+            if (!ValidateConfig(config)) {
                 output.InvalidConfiguration<ResourceLocation>();
                 return;
             }
 
             List<(Regex Regex, bool Allow)> filters = config.Value.GetProperty("filters").EnumerateArray()
                 .Select(f => (new Regex(f.GetString().Substring(1)), f.GetString().StartsWith('+'))).ToList();
-            
+
             foreach (var ns in pack.Namespaces) {
                 foreach (var resource in ns.AllResources) {
                     var path = ns.FolderPath + '/' + resource.FilePath;

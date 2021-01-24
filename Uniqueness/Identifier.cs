@@ -8,7 +8,10 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 
-namespace Uniqueness {
+namespace Core.Uniqueness {
+    /// <summary>
+    /// Written by Bertie2011
+    /// </summary>
     public class Identifier : CheckerRule {
         private static readonly char[] PrefixSeparators = new char[] { '.', '-', '_' };
         public override string Title => "All in-game resources must have a prefixed identifier.";
@@ -65,8 +68,8 @@ The allowed prefixes/namespaces can be extended or overriden by supplying a conf
                         }
 
                         bool configMatch = config != null && (
-                            (isNamespace && config.Value.GetProperty("namespaces").EnumerateArray().Any(v => v.GetString() == prefix))
-                            || (!isNamespace && config.Value.GetProperty("prefixes").EnumerateArray().Any(v => v.GetString() == prefix)));
+                            isNamespace && config.Value.GetProperty("namespaces").EnumerateArray().Any(v => v.GetString() == prefix)
+                            || !isNamespace && config.Value.GetProperty("prefixes").EnumerateArray().Any(v => v.GetString() == prefix));
                         bool append = config == null || config.Value.GetProperty("extend").GetBoolean();
 
                         if (!PrefixAllowed(prefix, isNamespace, foundPrefix, append, configMatch, ns)) {
@@ -86,13 +89,13 @@ The allowed prefixes/namespaces can be extended or overriden by supplying a conf
 
         private bool ValidateConfig(JsonElement? config) {
             return config == null ||
-                (config.Value.ValueKind == JsonValueKind.Object &&
+                config.Value.ValueKind == JsonValueKind.Object &&
                     config.Value.TryGetProperty("namespaces", out JsonElement namespaces) &&
                     namespaces.EnumerateArray().All(v => v.ValueKind == JsonValueKind.String) &&
                     config.Value.TryGetProperty("prefixes", out JsonElement prefixes) &&
                     prefixes.EnumerateArray().All(v => v.ValueKind == JsonValueKind.String) &&
                     config.Value.TryGetProperty("extend", out JsonElement extend) &&
-                    (extend.ValueKind == JsonValueKind.False || extend.ValueKind == JsonValueKind.True));
+                    (extend.ValueKind == JsonValueKind.False || extend.ValueKind == JsonValueKind.True);
         }
 
         /// <summary>
@@ -130,7 +133,7 @@ The allowed prefixes/namespaces can be extended or overriden by supplying a conf
             else if (isNamespace) {
                 return append && ns.Name == prefix;
             } else {
-                return (foundPrefix == null && append) || (foundPrefix != null && foundPrefix == prefix);
+                return foundPrefix == null && append || foundPrefix != null && foundPrefix == prefix;
             }
         }
     }

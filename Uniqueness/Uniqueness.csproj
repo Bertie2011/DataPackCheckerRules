@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+    <RootNamespace>Core.Uniqueness</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

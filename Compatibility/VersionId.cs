@@ -6,7 +6,10 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 
-namespace Compatibility {
+namespace Core.Compatibility {
+    /// <summary>
+    /// Written by Bertie2011
+    /// </summary>
     public class VersionId : CheckerRule {
         public override string Title => "The version identifier must be correct.";
 

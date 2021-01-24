@@ -6,7 +6,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
-namespace Style {
+namespace Core.Style {
+    /// <summary>
+    /// Written by Bertie2011
+    /// </summary>
     public class AsAtComments : CheckerRule {
         public override string Title => "A function must start with comments describing the 'as/at' context.";
 

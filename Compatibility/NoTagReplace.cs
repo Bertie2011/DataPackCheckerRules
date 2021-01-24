@@ -4,7 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace Compatibility {
+namespace Core.Compatibility {
+    /// <summary>
+    /// Written by Bertie2011
+    /// </summary>
     public class NoTagReplace : CheckerRule {
         public override string Title => "Tags must not overwrite entries defined in lower priority data packs.";
 

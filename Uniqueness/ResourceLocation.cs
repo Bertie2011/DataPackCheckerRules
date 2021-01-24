@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 
-namespace Uniqueness {
+namespace Core.Uniqueness {
     /// <summary>
     /// Written by Bertie2011
     /// </summary>
@@ -64,16 +64,16 @@ Otherwise, the allowed subfolders can be extended or overriden by supplying a co
 
         private bool ValidateConfig(JsonElement? config) {
             return config == null ||
-                (config.Value.ValueKind == JsonValueKind.Object &&
+                config.Value.ValueKind == JsonValueKind.Object &&
                     config.Value.TryGetProperty("options", out JsonElement options) &&
                     options.EnumerateArray().All(v => v.ValueKind == JsonValueKind.String) &&
                     config.Value.TryGetProperty("extend", out JsonElement extend) &&
-                    (extend.ValueKind == JsonValueKind.False || extend.ValueKind == JsonValueKind.True));
+                    (extend.ValueKind == JsonValueKind.False || extend.ValueKind == JsonValueKind.True);
         }
 
         private bool FolderAllowed(string path, string subfolder, bool append, bool configMatch) {
-            return configMatch || (subfolder == null && append)
-                || (subfolder != null && subfolder == path);
+            return configMatch || subfolder == null && append
+                || subfolder != null && subfolder == path;
         }
     }
 }
