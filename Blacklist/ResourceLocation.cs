@@ -1,6 +1,7 @@
 ﻿using DataPackChecker.Shared;
 using DataPackChecker.Shared.Data;
 using DataPackChecker.Shared.Data.Resources;
+using DataPackChecker.Shared.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -69,11 +70,10 @@ Otherwise allow." };
         }
 
         private bool ValidateConfig(JsonElement? config) {
-            return config != null && config.Value.ValueKind == JsonValueKind.Object
-                && config.Value.TryGetProperty("filters", out JsonElement filters)
-                && filters.ValueKind == JsonValueKind.Array
-                && filters.EnumerateArray().All(v => v.ValueKind == JsonValueKind.String
-                    && (v.GetString().StartsWith('+') || v.GetString().StartsWith('-')));
+            return config.TryValue(out JsonElement c) && c.IsObject()
+                && c.TryAsArray("filters", out JsonElement filters)
+                && filters.EnumerateArray().All(f => f.TryAsString(out string v)
+                    && (v.StartsWith('+') || v.StartsWith('-')));
         }
     }
 }

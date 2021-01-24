@@ -80,12 +80,6 @@
             or tags will be listed here.
             </summary>
         </member>
-        <member name="P:DataPackChecker.Shared.Data.Resources.Function.CommandsFlatWithReferences">
-            <summary>
-            Return all commands (including NextCommands) of all uniquely referenced functions (recursive), including this one.
-            This is an expensive operation.
-            </summary>
-        </member>
         <member name="P:DataPackChecker.Shared.Data.Resources.Resource.FilePath">
             <summary>
             The file path relative to the namespace folder.
@@ -158,6 +152,181 @@
         <member name="M:DataPackChecker.Shared.Output.GetResourceIdentifier(DataPackChecker.Shared.Data.Namespace,DataPackChecker.Shared.Data.Resources.Resource)">
             <summary>
             Returns: {r.GetTypeString()} {GetResourcePath(ns, r)}
+            </summary>
+        </member>
+        <member name="T:DataPackChecker.Shared.Util.JsonElementExtensions">
+            <summary>
+            <b>TryGet VS TryAs</b><br/>
+            The JsonElement TryGet... methods throw when the type does not match and only try to parse the data.
+            The TryAs... extension methods also take value type into account and return false (instead of throw) when the type does not match.
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsBool(System.Text.Json.JsonElement,System.Boolean@)">
+            <summary>
+            Returns true if this is a boolean. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsString(System.Text.Json.JsonElement,System.String@)">
+            <summary>
+            Returns true if this is a string. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsByte(System.Text.Json.JsonElement,System.Byte@)">
+            <summary>
+            Returns true if this is a byte. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsBytesFromBase64(System.Text.Json.JsonElement,System.Byte[]@)">
+            <summary>
+            Returns true if this represents bytes from base64. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsDateTime(System.Text.Json.JsonElement,System.DateTime@)">
+            <summary>
+            Returns true if this is a DateTime. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsDateTimeOffset(System.Text.Json.JsonElement,System.DateTimeOffset@)">
+            <summary>
+            Returns true if this is a DateTimeOffset. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsDecimal(System.Text.Json.JsonElement,System.Decimal@)">
+            <summary>
+            Returns true if this is a decimal. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsDouble(System.Text.Json.JsonElement,System.Double@)">
+            <summary>
+            Returns true if this is a double. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsGuid(System.Text.Json.JsonElement,System.Guid@)">
+            <summary>
+            Returns true if this is a Guid. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsShort(System.Text.Json.JsonElement,System.Int16@)">
+            <summary>
+            Returns true if this is a short. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsInt(System.Text.Json.JsonElement,System.Int32@)">
+            <summary>
+            Returns true if this is an int. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsLong(System.Text.Json.JsonElement,System.Int64@)">
+            <summary>
+            Returns true if this is a long. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsFloat(System.Text.Json.JsonElement,System.Single@)">
+            <summary>
+            Returns true if this is a float. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsBool(System.Text.Json.JsonElement,System.String,System.Boolean@)">
+            <summary>
+            Returns true if the property is a boolean. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsString(System.Text.Json.JsonElement,System.String,System.String@)">
+            <summary>
+            Returns true if the property is a string. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsByte(System.Text.Json.JsonElement,System.String,System.Byte@)">
+            <summary>
+            Returns true if the property is a byte. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsBytesFromBase64(System.Text.Json.JsonElement,System.String,System.Byte[]@)">
+            <summary>
+            Returns true if the property represents bytes from base64. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsDateTime(System.Text.Json.JsonElement,System.String,System.DateTime@)">
+            <summary>
+            Returns true if the property is a DateTime. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsDateTimeOffset(System.Text.Json.JsonElement,System.String,System.DateTimeOffset@)">
+            <summary>
+            Returns true if the property is a DateTimeOffset. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsDecimal(System.Text.Json.JsonElement,System.String,System.Decimal@)">
+            <summary>
+            Returns true if the property is a decimal. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsDouble(System.Text.Json.JsonElement,System.String,System.Double@)">
+            <summary>
+            Returns true if the property is a double. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsGuid(System.Text.Json.JsonElement,System.String,System.Guid@)">
+            <summary>
+            Returns true if the property is a Guid. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsShort(System.Text.Json.JsonElement,System.String,System.Int16@)">
+            <summary>
+            Returns true if the property is a short. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsInt(System.Text.Json.JsonElement,System.String,System.Int32@)">
+            <summary>
+            Returns true if the property is an int. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsLong(System.Text.Json.JsonElement,System.String,System.Int64@)">
+            <summary>
+            Returns true if the property is a long. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsFloat(System.Text.Json.JsonElement,System.String,System.Single@)">
+            <summary>
+            Returns true if the property is a float. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsArray(System.Text.Json.JsonElement,System.String,System.Text.Json.JsonElement@)">
+            <summary>
+            Returns true if the property is an array. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
+            </summary>
+        </member>
+        <member name="M:DataPackChecker.Shared.Util.JsonElementExtensions.TryAsObject(System.Text.Json.JsonElement,System.String,System.Text.Json.JsonElement@)">
+            <summary>
+            Returns true if the property is an object. The out parameter contains the value.
+            <br/><br/><inheritdoc cref="T:DataPackChecker.Shared.Util.JsonElementExtensions"/>
             </summary>
         </member>
     </members>

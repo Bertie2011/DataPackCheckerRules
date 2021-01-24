@@ -1,6 +1,7 @@
 ﻿using DataPackChecker.Shared;
 using DataPackChecker.Shared.Data;
 using DataPackChecker.Shared.Data.Resources;
+using DataPackChecker.Shared.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -88,14 +89,12 @@ The allowed prefixes/namespaces can be extended or overriden by supplying a conf
         }
 
         private bool ValidateConfig(JsonElement? config) {
-            return config == null ||
-                config.Value.ValueKind == JsonValueKind.Object &&
-                    config.Value.TryGetProperty("namespaces", out JsonElement namespaces) &&
-                    namespaces.EnumerateArray().All(v => v.ValueKind == JsonValueKind.String) &&
-                    config.Value.TryGetProperty("prefixes", out JsonElement prefixes) &&
-                    prefixes.EnumerateArray().All(v => v.ValueKind == JsonValueKind.String) &&
-                    config.Value.TryGetProperty("extend", out JsonElement extend) &&
-                    (extend.ValueKind == JsonValueKind.False || extend.ValueKind == JsonValueKind.True);
+            return config == null || (config.TryValue(out JsonElement c) && c.IsObject() &&
+                    c.TryAsArray("namespaces", out JsonElement namespaces) &&
+                    namespaces.EnumerateArray().All(v => v.IsString()) &&
+                    c.TryAsArray("prefixes", out JsonElement prefixes) &&
+                    prefixes.EnumerateArray().All(v => v.IsString()) &&
+                    c.IsBool("extend"));
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using DataPackChecker.Shared;
 using DataPackChecker.Shared.Data;
 using DataPackChecker.Shared.Data.Resources;
+using DataPackChecker.Shared.Util;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -63,12 +64,10 @@ Otherwise, the allowed subfolders can be extended or overriden by supplying a co
         }
 
         private bool ValidateConfig(JsonElement? config) {
-            return config == null ||
-                config.Value.ValueKind == JsonValueKind.Object &&
-                    config.Value.TryGetProperty("options", out JsonElement options) &&
-                    options.EnumerateArray().All(v => v.ValueKind == JsonValueKind.String) &&
-                    config.Value.TryGetProperty("extend", out JsonElement extend) &&
-                    (extend.ValueKind == JsonValueKind.False || extend.ValueKind == JsonValueKind.True);
+            return config == null || (config.TryValue(out JsonElement c) && c.IsObject() &&
+                    c.TryAsArray("options", out JsonElement options) &&
+                    options.EnumerateArray().All(v => v.IsString()) &&
+                    c.IsBool("extend"));
         }
 
         private bool FolderAllowed(string path, string subfolder, bool append, bool configMatch) {

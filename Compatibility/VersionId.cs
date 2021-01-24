@@ -1,5 +1,6 @@
 ﻿using DataPackChecker.Shared;
 using DataPackChecker.Shared.Data;
+using DataPackChecker.Shared.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,9 +25,8 @@ namespace Core.Compatibility {
 }" };
 
         public override void Run(DataPack pack, JsonElement? config, Output output) {
-            if (config == null || config.Value.ValueKind != JsonValueKind.Object
-                || !config.Value.TryGetProperty("version", out JsonElement version)
-                || version.ValueKind != JsonValueKind.Number) {
+            if (!(config.TryValue(out JsonElement c) && c.IsObject()
+                && c.IsNumber("version"))) {
                 output.InvalidConfiguration<VersionId>();
             } else {
                 var versionConfig = config.Value.GetProperty("version").GetInt32();
