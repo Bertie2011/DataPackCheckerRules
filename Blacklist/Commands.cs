@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Linq;
 using DataPackChecker.Shared.Util;
+using System.Text.RegularExpressions;
 
 namespace Core.Blacklist {
     /// <summary>
@@ -15,22 +16,23 @@ namespace Core.Blacklist {
     class Commands : CheckerRule {
         private class CommandInfo {
             public Function Owner { get; set; }
-            public List<Function> ReferencedBy { get; } = new List<Function>();
-            public CommandInfo(Function owner) {
-                Owner = owner;
-                ReferencedBy.Add(owner);
-            }
+            public HashSet<string> ReferencedBy { get; } = new HashSet<string>();
+        }
+
+        private class Filter {
+            public List<(Regex Regex, bool Allow)> IdentifierChecks { get; } = new List<(Regex Regex, bool Allow)>();
+            public List<(Regex Regex, bool Allow)> CommandChecks { get; } = new List<(Regex Regex, bool Allow)>();
         }
 
         public override string Title => "Certain commands are not allowed in certain functions.";
 
-        public override string Description => @"Some commands are not allowed in some functions. Each tag and function will be tested with a filter.
+        public override string Description => @"Some commands are not allowed in some functions. Each command will be tested with a filter.
 
-A filter consists of a list of regular expressions that are matched against the function/tag identifier in order. An identifier follows the pattern '<namespace>:<path>/<name>', where tags are prefixed with #. Expressions must also be prefixed by + (next filter) or - (check commands). If none of the identifier regexes match, the next filter is considered.
+A filter consists of a list of regular expressions that are matched against the functions/tags that reference the command in order. An identifier follows the pattern '<namespace>:<path>/<name>', where tags are prefixed with #. Expressions must also be prefixed by + (allow) or - (check commands). If none of the referencing functions/tags match any of the identifier regexes, the next filter is considered.
 
-When a function/tag has a negative (prefixed with -) match in a filter, all commands found in that function/tag and their references to other functions/tags are matched against another list of regular expressions. This happens in similar fashion, meaning that each expression is matched in order and must be prefixed by + (next filter) or - (disallow). If none of the command regexes match, the next filter is considered.
+When a command has a referencing function/tag with a negative (prefixed with -) match, the command is matched against another list of regular expressions. This happens in similar fashion, meaning that each expression is matched in order and must be prefixed by + (allow) or - (disallow). If none of the command regexes match, the next filter is considered.
 
-If none of the filters give a double negative match (for location and command), the command is allowed.";
+If none of the filters give a double negative match (for location of referencing tags/functions and the command itself), the command is allowed.";
 
         public override List<string> GoodExamples => new List<string>() {@"{
     ""filters"": [
@@ -85,24 +87,89 @@ my_namespace:my_function - execute as @a at @s if block ~ ~-1 ~ air run ban @s[t
                 output.InvalidConfiguration<ResourceLocation>();
                 return;
             }
-            Dictionary<Command, CommandInfo> commands = new Dictionary<Command, CommandInfo>();
+            Dictionary<Command, HashSet<string>> commands = BuildReferencesStore(pack);
+            List<Filter> filters = BuildFilters(config);
+            foreach (var command in commands) {
+                for (int i = 0; i < filters.Count; i++) {
+                    if (TryGetNegativeIdentifierMatch(filters[i], command.Value, out string reference)
+                        && HasNegativeCommandMatch(filters[i], command.Key)) {
+                        var type = reference.StartsWith('#') ? "tag" : "function";
+                        output.Error(command.Key, $"This command is blacklisted by filter {i + 1} when referenced by {type} '{reference}'");
+                    }
+                }
+            }
+        }
 
-            // Build command info.
+        private bool TryGetNegativeIdentifierMatch(Filter filter, HashSet<string> references, out string identifier) {
+            identifier = default;
+            foreach (var reference in references) {
+                foreach (var check in filter.IdentifierChecks) {
+                    if (check.Regex.IsMatch(reference)) {
+                        if (!check.Allow) {
+                            identifier = reference;
+                            return true;
+                        }
+                        break;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool HasNegativeCommandMatch(Filter filter, Command command) {
+            foreach (var check in filter.CommandChecks) {
+                if (check.Regex.IsMatch(command.Raw)) {
+                    if (!check.Allow) return true;
+                    break;
+                }
+            }
+            return false;
+        }
+
+        private List<Filter> BuildFilters(JsonElement? config) {
+            List<Filter> result = new List<Filter>();
+
+            foreach (var filterJson in config.Value.GetProperty("filters").EnumerateArray()) {
+                var filter = new Filter();
+                result.Add(filter);
+                foreach (var id in filterJson.GetProperty("identifiers").EnumerateArray()) {
+                    filter.IdentifierChecks.Add((new Regex(id.GetString().Substring(1)), id.GetString().StartsWith('+')));
+                }
+                foreach (var command in filterJson.GetProperty("commands").EnumerateArray()) {
+                    filter.CommandChecks.Add((new Regex(command.GetString().Substring(1)), command.GetString().StartsWith('+')));
+                }
+            }
+
+            return result;
+        }
+
+        private Dictionary<Command, HashSet<string>> BuildReferencesStore(DataPack pack) {
+            Dictionary<Command, HashSet<string>> commands = new Dictionary<Command, HashSet<string>>();
+
             foreach (var ns in pack.Namespaces) {
                 foreach (var f in ns.Functions) {
-                    foreach (var otherF in f.ReferencesFlat) {
-                        foreach (var c in otherF.CommandsFlat) {
-                            if (!commands.TryGetValue(c, out CommandInfo info)) {
-                                info = new CommandInfo(otherF);
+                    foreach (var ownerF in f.ReferencesFlat) {
+                        foreach (var c in ownerF.CommandsFlat) {
+                            if (c.ContentType != Command.Type.Command) continue;
+                            if (!commands.TryGetValue(c, out HashSet<string> info)) {
+                                info = new HashSet<string>();
                                 commands.Add(c, info);
                             }
-                            info.ReferencedBy.Add(f);
+                            info.Add(f.NamespacedIdentifier);
+                        }
+                    }
+                }
+                foreach (var ft in ns.TagData.FunctionTags) {
+                    foreach (var ownerF in ft.References.SelectMany(refF => refF.ReferencesFlat)) {
+                        foreach (var c in ownerF.CommandsFlat) {
+                            if (c.ContentType != Command.Type.Command) continue;
+                            commands[c].Add(ft.NamespacedIdentifier);
                         }
                     }
                 }
             }
 
-
+            return commands;
         }
 
         private bool ValidateConfig(JsonElement? config) {

@@ -33,7 +33,7 @@ namespace Core.Style {
                     }
 
                     if (!asComment || !atComment) {
-                        output.Error(ns, f, "Function does not start with as/at comments.");
+                        output.Error(f, "Function does not start with as/at comments.");
                     }
                 }
             }

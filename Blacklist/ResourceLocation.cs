@@ -63,7 +63,7 @@ Otherwise allow." };
                         }
                     }
                     if (!allow) {
-                        output.Error(ns, resource, "Resource location is blacklisted.");
+                        output.Error(resource, "Resource location is blacklisted.");
                     }
                 }
             }

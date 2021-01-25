@@ -21,7 +21,7 @@ namespace Core.Compatibility {
             foreach (var ns in pack.Namespaces) {
                 foreach (var tag in ns.TagData.AllTags) {
                     if (tag.Content.TryGetProperty("replace", out JsonElement replace) && replace.GetBoolean()) {
-                        output.Error(ns, tag, "Tag cannot replace contents of lower priority data packs, remove 'replace: true'.");
+                        output.Error(tag, "Tag cannot replace contents of lower priority data packs, remove 'replace: true'.");
                     }
                 }
             }

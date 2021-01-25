@@ -45,7 +45,7 @@ Otherwise, the allowed subfolders can be extended or overriden by supplying a co
                 foreach (var resource in ns.AllResources) {
                     var path = resource.Identifier.Split('/', '\\')[0];
                     if (string.IsNullOrWhiteSpace(resource.Identifier)) {
-                        output.Error(ns, resource, "Resource is not in a subfolder");
+                        output.Error(resource, "Resource is not in a subfolder");
                         continue;
                     }
 
@@ -53,8 +53,8 @@ Otherwise, the allowed subfolders can be extended or overriden by supplying a co
                     bool append = config == null || config.Value.GetProperty("extend").GetBoolean();
 
                     if (!FolderAllowed(path, subfolder, append, configMatch)) {
-                        if (subfolder != null) output.Error(ns, resource, $"Resource subfolder does not match {output.GetResourceIdentifier(ns, subfolderR)} or any of the ones in the config file.");
-                        else output.Error(ns, resource, $"Resource subfolder does not match any of the ones in the config file.");
+                        if (subfolder != null) output.Error(resource, $"Resource subfolder does not match {subfolderR.NamespacedIdentifier} or any of the ones in the config file.");
+                        else output.Error(resource, $"Resource subfolder does not match any of the ones in the config file.");
                     } else if (subfolder == null && append && !configMatch) {
                         subfolder = path;
                         subfolderR = resource;
