@@ -41,7 +41,7 @@ If none of the filters give a double negative match (for location of referencing
                 ""-.*""
             ],
             ""commands"": [
-                ""-(ban|ban-ip|pardon|kick|op|deop|forceload|stop).*""
+                ""-(ban|ban-ip|pardon|kick|op|deop|forceload|stop) .*""
             ]
         },
         {
@@ -49,7 +49,7 @@ If none of the filters give a double negative match (for location of referencing
                 ""-#minecraft:load""
             ],
             ""commands"": [
-                ""-(say|me|tellraw|msg|w|teammsg|tell|title).*""
+                ""-(say|me|tellraw|msg|w|teammsg|tell|title) .*""
             ]
         }
     ]
@@ -133,10 +133,14 @@ my_namespace:my_function - execute as @a at @s if block ~ ~-1 ~ air run ban @s[t
                 var filter = new Filter();
                 result.Add(filter);
                 foreach (var id in filterJson.GetProperty("identifiers").EnumerateArray()) {
-                    filter.IdentifierChecks.Add((new Regex(id.GetString().Substring(1)), id.GetString().StartsWith('+')));
+                    filter.IdentifierChecks.Add((
+                        new Regex($"^{id.GetString().Substring(1)}$"),
+                        id.GetString().StartsWith('+')));
                 }
                 foreach (var command in filterJson.GetProperty("commands").EnumerateArray()) {
-                    filter.CommandChecks.Add((new Regex(command.GetString().Substring(1)), command.GetString().StartsWith('+')));
+                    filter.CommandChecks.Add((
+                        new Regex($"^{command.GetString().Substring(1)}$"),
+                        command.GetString().StartsWith('+')));
                 }
             }
 

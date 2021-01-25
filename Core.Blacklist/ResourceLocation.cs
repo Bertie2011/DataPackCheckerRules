@@ -49,8 +49,10 @@ Otherwise allow." };
                 return;
             }
 
-            List<(Regex Regex, bool Allow)> filters = config.Value.GetProperty("filters").EnumerateArray()
-                .Select(f => (new Regex(f.GetString().Substring(1)), f.GetString().StartsWith('+'))).ToList();
+            List<(Regex Regex, bool Allow)> filters = config.Value.GetProperty("filters").EnumerateArray().Select(f => (
+                    new Regex($"^{f.GetString().Substring(1)}$"),
+                    f.GetString().StartsWith('+')))
+                .ToList();
 
             foreach (var ns in pack.Namespaces) {
                 foreach (var resource in ns.AllResources) {

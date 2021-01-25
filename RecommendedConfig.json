@@ -1,0 +1,50 @@
+[
+    {
+        "rule": "Core.Blacklist.Commands",
+        "config": {
+            "filters": [
+                {
+                    "identifiers": [
+                        "-.*"
+                    ],
+                    "commands": [
+                        "-(ban|ban-ip|pardon|kick|op|deop|forceload|stop).*"
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "rule": "Core.Blacklist.ResourceLocation",
+        "config": {
+            "filters": [
+                "+data/minecraft/tags/functions/(tick|load).json",
+                "-data/minecraft/.*"
+            ]
+        }
+    },
+    {
+        "rule": "Core.Compatibility.NoTagReplace"
+    },
+    {
+        "rule": "Core.Style.AsAtComments"
+    },
+    {
+        "rule": "Core.Style.UninstallFunction"
+    },
+    {
+        "rule": "Core.Uniqueness.Identifier",
+        "config": {
+            "namespaces": [],
+            "prefixes": [],
+            "extend": true
+        }
+    },
+    {
+        "rule": "Core.Uniqueness.ResourceLocation",
+        "config": {
+            "options": [],
+            "extend": true
+        }
+    }
+]

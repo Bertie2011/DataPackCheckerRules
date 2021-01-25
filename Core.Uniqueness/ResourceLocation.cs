@@ -43,8 +43,8 @@ Otherwise, the allowed subfolders can be extended or overriden by supplying a co
                 Resource subfolderR = null;
 
                 foreach (var resource in ns.AllResources) {
-                    var path = resource.Identifier.Split('/', '\\')[0];
-                    if (string.IsNullOrWhiteSpace(resource.Identifier)) {
+                    var path = resource.IdentifierPath.Split('/', '\\')[0];
+                    if (string.IsNullOrWhiteSpace(resource.IdentifierPath)) {
                         output.Error(resource, "Resource is not in a subfolder");
                         continue;
                     }
