@@ -4,6 +4,12 @@ This repository contains the source code and [releases](https://github.com/Berti
 View [the documentation](https://github.com/Bertie2011/DataPackChecker/blob/main/README.md) on how to start using the rules.
 
 ## Blacklist.dll
+<details><summary><b>Core.Blacklist.Commands</b><blockquote>Certain commands are not allowed in certain functions.</blockquote></summary>
+Some commands are not allowed in some functions. Each command will be tested with a filter.<br><br>
+A filter consists of a list of regular expressions that are matched against the functions/tags that reference the command in order. An identifier follows the pattern '{namespace}:{path}/{name}', where tags are prefixed with #. Expressions must also be prefixed by + (allow) or - (check commands). If none of the referencing functions/tags match any of the identifier regexes, the next filter is considered.<br><br>
+When a command has a referencing function/tag with a negative (prefixed with -) match, the command is matched against another list of regular expressions. This happens in similar fashion, meaning that each expression is matched in order and must be prefixed by + (allow) or - (disallow). If none of the command regexes match, the next filter is considered.<br><br>
+If none of the filters give a double negative match (for location of referencing tags/functions and the command itself), the command is allowed.
+</details>
 <details><summary><b>Core.Blacklist.ResourceLocation</b><blockquote>Certain resource locations are blacklisted.</blockquote></summary>
 Some resource locations are blacklisted. Each resource file path (starting with 'data/') is matched against a list of regular expressions until one matches. Based on a +/- prefix, the file will be allowed or disallowed. If none of the expressions match, the location is allowed. Use [^/]+ to allow any path element.
 </details>
