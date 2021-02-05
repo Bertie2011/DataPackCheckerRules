@@ -61,6 +61,7 @@ The allowed prefixes/namespaces can be extended or overriden by supplying a conf
 
                 foreach (var function in ns.Functions) {
                     foreach (var command in function.CommandsFlat) {
+                        if (command.ContentType != Command.Type.Command) continue;
                         var (prefix, isNamespace) = FindIdentifierPrefix(command);
                         if (prefix == null) continue;
                         else if (prefix == "") {
@@ -74,7 +75,7 @@ The allowed prefixes/namespaces can be extended or overriden by supplying a conf
                         bool append = config == null || config.Value.GetProperty("extend").GetBoolean();
 
                         if (!PrefixAllowed(prefix, isNamespace, foundPrefix, append, configMatch, ns)) {
-                            if (isNamespace && append) output.Error(command, $"Identifier namespace does not match function namespace or any of the ones or config file.");
+                            if (isNamespace && append) output.Error(command, $"Identifier namespace does not match function namespace or any of the ones in the config file.");
                             else if (isNamespace) output.Error(command, $"Identifier namespace does not match any of the ones in the config file.");
                             else if (foundPrefix != null) output.Error(command, $"Identifier prefix does not match {foundPrefix} found on {foundPrefixF.NamespacedIdentifier} line {foundPrefixC.Line} or any of the ones in the config file.");
                             else output.Error(command, $"Identifier prefix does not match any of the ones in the config file.");
