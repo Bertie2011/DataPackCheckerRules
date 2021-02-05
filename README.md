@@ -27,7 +27,7 @@ The version identifier 'pack_format' in pack.mcmeta has to match the number set 
 In each function a certain context is assumed, which includes the meaning of @s, @p and ~ ~ ~. Writing down that context at the top of the function might save some time debugging and help out if the function is revisited in the future. Spacing within the lines is not checked.
 </details>
 <details><summary><b>Core.Style.UninstallFunction</b><blockquote>There must be an uninstall function.</blockquote></summary>
-Providing an uninstall function will help remove traces and leave a clean world behind before the data pack is removed.
+Providing an uninstall function will help remove traces and leave a clean world behind before the data pack is removed. An uninstall function must contain commands that remove all created in-game resources. The function file can be located in any directory.
 </details>
 
 ## Uniqueness.dll
