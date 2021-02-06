@@ -1,7 +1,7 @@
 # Data Pack Checker Rules
 This repository contains the source code and [releases](https://github.com/Bertie2011/DataPackCheckerRules/releases) of rules made by and/or supported by the creator of [Data Pack Checker](https://github.com/Bertie2011/DataPackChecker). There is a recommended configuration that all data pack creators should use [here](https://github.com/Bertie2011/DataPackCheckerRules/blob/main/RecommendedConfig.json).
 
-View [the documentation](https://github.com/Bertie2011/DataPackChecker/blob/main/README.md) on how to start using the rules.
+View [the documentation](https://github.com/Bertie2011/DataPackChecker/wiki/For-Data-Pack-Creators) on how to start using the rules.
 
 ## Blacklist.dll
 <details><summary><b>Core.Blacklist.Commands</b><blockquote>Certain commands are not allowed in certain functions.</blockquote></summary>
