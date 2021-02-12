@@ -155,11 +155,7 @@ my_namespace:my_function - execute as @a at @s if block ~ ~-1 ~ air run ban @s[t
                     foreach (var ownerF in f.ReferencesFlat) {
                         foreach (var c in ownerF.CommandsFlat) {
                             if (c.ContentType != Command.Type.Command) continue;
-                            if (!commands.TryGetValue(c, out HashSet<string> info)) {
-                                info = new HashSet<string>();
-                                commands.Add(c, info);
-                            }
-                            info.Add(f.NamespacedIdentifier);
+                            GetOrCreate(commands, c).Add(f.NamespacedIdentifier);
                         }
                     }
                 }
@@ -167,13 +163,21 @@ my_namespace:my_function - execute as @a at @s if block ~ ~-1 ~ air run ban @s[t
                     foreach (var ownerF in ft.References.SelectMany(refF => refF.ReferencesFlat)) {
                         foreach (var c in ownerF.CommandsFlat) {
                             if (c.ContentType != Command.Type.Command) continue;
-                            commands[c].Add(ft.NamespacedIdentifier);
+                            GetOrCreate(commands, c).Add(ft.NamespacedIdentifier);
                         }
                     }
                 }
             }
 
             return commands;
+        }
+
+        private HashSet<string> GetOrCreate(Dictionary<Command, HashSet<string>> references, Command key) {
+            if (!references.TryGetValue(key, out HashSet<string> result)) {
+                result = new HashSet<string>();
+                references.Add(key, result);
+            }
+            return result;
         }
 
         private bool ValidateConfig(JsonElement? config) {
