@@ -8,7 +8,7 @@
                         "-.*"
                     ],
                     "commands": [
-                        "-(ban|ban-ip|pardon|kick|op|deop|forceload|stop).*"
+                        "-(ban|ban-ip|pardon|kick|op|deop|forceload|stop|debug|publish|reload|save-all|save-on|save-off|whitelist) .*"
                     ]
                 }
             ]

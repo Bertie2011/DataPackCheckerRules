@@ -106,8 +106,7 @@ The allowed prefixes/namespaces can be extended or overriden by supplying a conf
         private (string Prefix, bool IsNamespace) FindIdentifierPrefix(Command command) {
             string full_identifier;
             bool isNamespace;
-            if (command.ContentType != Command.Type.Command) return (null, false);
-            else if (command.Raw.StartsWith("scoreboard objectives add ")) {
+            if (command.Raw.StartsWith("scoreboard objectives add ")) {
                 full_identifier = command.Arguments[2];
                 isNamespace = false;
             } else if (command.CommandKey == "tag" && command.Arguments[1] == "add") {
