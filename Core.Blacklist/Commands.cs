@@ -20,7 +20,7 @@ namespace Core.Blacklist {
         }
 
         private class Filter {
-            public List<(Regex Regex, bool Allow)> IdentifierChecks { get; } = new List<(Regex Regex, bool Allow)>();
+            public List<(Regex Regex, bool Allow)> ResourceChecks { get; } = new List<(Regex Regex, bool Allow)>();
             public List<(Regex Regex, bool Allow)> CommandChecks { get; } = new List<(Regex Regex, bool Allow)>();
         }
 
@@ -28,16 +28,16 @@ namespace Core.Blacklist {
 
         public override string Description => @"Some commands are not allowed in some functions. Each command will be tested with a filter.
 
-A filter consists of a list of regular expressions that are matched against the functions/tags that reference the command in order. An identifier follows the pattern '<namespace>:<path>/<name>', where tags are prefixed with #. Expressions must also be prefixed by + (allow) or - (check commands). If none of the referencing functions/tags match any of the identifier regexes, the next filter is considered.
+A filter consists of a list of regular expressions that are matched against the functions/tags that reference the command in order. A resource identifier follows the pattern '<namespace>:<path>/<name>', where tags are prefixed with #. Expressions must also be prefixed by + (allow) or - (check commands). If none of the referencing functions/tags match any of the resource regexes, the next filter is considered.
 
 When a command has a referencing function/tag with a negative (prefixed with -) match, the command is matched against another list of regular expressions. This happens in similar fashion, meaning that each expression is matched in order and must be prefixed by + (allow) or - (disallow). If none of the command regexes match, the next filter is considered.
 
 If none of the filters give a double negative match (for location of referencing tags/functions and the command itself), the command is allowed.";
 
-        public override List<string> GoodExamples => new List<string>() {@"{
+        public override List<string> GoodExamples => new List<string>() { @"{
     ""filters"": [
         {
-            ""identifiers"": [
+            ""resources"": [
                 ""-.*""
             ],
             ""commands"": [
@@ -45,7 +45,7 @@ If none of the filters give a double negative match (for location of referencing
             ]
         },
         {
-            ""identifiers"": [
+            ""resources"": [
                 ""-#minecraft:load""
             ],
             ""commands"": [
@@ -65,11 +65,11 @@ my_namespace:my_function - execute as @a at @s if block ~ ~-1 ~ air run ban @s[t
         public override List<string> ConfigExamples => new List<string>() { @"{
     ""filters"": [
         {
-            ""identifiers"": [
-                ""+#<identifier regex1>"",
-                ""-#<identifier regex2>"",
-                ""+<identifier regex3>"",
-                ""-<identifier regex4>"",
+            ""resources"": [
+                ""+#<resource regex1>"",
+                ""-#<resource regex2>"",
+                ""+<resource regex3>"",
+                ""-<resource regex4>"",
                 ...
             ],
             ""commands"": [
@@ -91,7 +91,7 @@ my_namespace:my_function - execute as @a at @s if block ~ ~-1 ~ air run ban @s[t
             List<Filter> filters = BuildFilters(config);
             foreach (var command in commands) {
                 for (int i = 0; i < filters.Count; i++) {
-                    if (TryGetNegativeIdentifierMatch(filters[i], command.Value, out string reference)
+                    if (TryGetNegativeResourceMatch(filters[i], command.Value, out string reference)
                         && HasNegativeCommandMatch(filters[i], command.Key)) {
                         var type = reference.StartsWith('#') ? "tag" : "function";
                         output.Error(command.Key, $"This command is blacklisted by filter {i + 1} when referenced by {type} '{reference}'");
@@ -100,10 +100,10 @@ my_namespace:my_function - execute as @a at @s if block ~ ~-1 ~ air run ban @s[t
             }
         }
 
-        private bool TryGetNegativeIdentifierMatch(Filter filter, HashSet<string> references, out string identifier) {
+        private bool TryGetNegativeResourceMatch(Filter filter, HashSet<string> references, out string identifier) {
             identifier = default;
             foreach (var reference in references) {
-                foreach (var check in filter.IdentifierChecks) {
+                foreach (var check in filter.ResourceChecks) {
                     if (check.Regex.IsMatch(reference)) {
                         if (!check.Allow) {
                             identifier = reference;
@@ -132,8 +132,8 @@ my_namespace:my_function - execute as @a at @s if block ~ ~-1 ~ air run ban @s[t
             foreach (var filterJson in config.Value.GetProperty("filters").EnumerateArray()) {
                 var filter = new Filter();
                 result.Add(filter);
-                foreach (var id in filterJson.GetProperty("identifiers").EnumerateArray()) {
-                    filter.IdentifierChecks.Add((
+                foreach (var id in filterJson.GetProperty("resources").EnumerateArray()) {
+                    filter.ResourceChecks.Add((
                         new Regex($"^{id.GetString().Substring(1)}$"),
                         id.GetString().StartsWith('+')));
                 }
@@ -184,7 +184,7 @@ my_namespace:my_function - execute as @a at @s if block ~ ~-1 ~ air run ban @s[t
             return config.TryValue(out JsonElement c) && c.IsObject()
                 && c.TryAsArray("filters", out JsonElement filters)
                 && filters.EnumerateArray().All(f => f.IsObject()
-                    && f.TryAsArray("identifiers", out JsonElement ids)
+                    && f.TryAsArray("resources", out JsonElement ids)
                     && ids.EnumerateArray().All(id => id.TryAsString(out string v)
                         && (v.StartsWith('-') || v.StartsWith('+')))
                     && f.TryAsArray("commands", out JsonElement commands)
