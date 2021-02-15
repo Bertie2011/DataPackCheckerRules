@@ -14,11 +14,6 @@ namespace Core.Blacklist {
     /// Written by Bertie2011
     /// </summary>
     class Commands : CheckerRule {
-        private class CommandInfo {
-            public Function Owner { get; set; }
-            public HashSet<string> ReferencedBy { get; } = new HashSet<string>();
-        }
-
         private class Filter {
             public List<(Regex Regex, bool Allow)> ResourceChecks { get; } = new List<(Regex Regex, bool Allow)>();
             public List<(Regex Regex, bool Allow)> CommandChecks { get; } = new List<(Regex Regex, bool Allow)>();
@@ -28,11 +23,10 @@ namespace Core.Blacklist {
 
         public override string Description => @"Some commands are not allowed in some functions. Each command will be tested with a filter.
 
-A filter consists of a list of regular expressions that are matched against the functions/tags that reference the command in order. A resource identifier follows the pattern '<namespace>:<path>/<name>', where tags are prefixed with #. Expressions must also be prefixed by + (allow) or - (check commands). If none of the referencing functions/tags match any of the resource regexes, the next filter is considered.
+A filter consists of multiple lists, one for resource location ([#]<namespace>:[path/]name) and one for commands. Each list contains regular expressions and the first match determines the verdict based on a + (allow) or - (disallow) prefix.
 
-When a command has a referencing function/tag with a negative (prefixed with -) match, the command is matched against another list of regular expressions. This happens in similar fashion, meaning that each expression is matched in order and must be prefixed by + (allow) or - (disallow). If none of the command regexes match, the next filter is considered.
-
-If none of the filters give a double negative match (for location of referencing tags/functions and the command itself), the command is allowed.";
+If there is a referencing function/tag of which the first match in the 'resources' list is prefixed with - AND the first match in the 'commands' list is prefixed with -, the command is disallowed.
+Each command will produce an error for each of the filters with a double negative match.";
 
         public override List<string> GoodExamples => new List<string>() { @"{
     ""filters"": [
@@ -83,7 +77,7 @@ my_namespace:my_function - execute as @a at @s if block ~ ~-1 ~ air run ban @s[t
 }" };
 
         public override void Run(DataPack pack, JsonElement? config, Output output) {
-             if (!ValidateConfig(config)) {
+            if (!ValidateConfig(config)) {
                 output.InvalidConfiguration<ResourceLocation>();
                 return;
             }

@@ -4,7 +4,7 @@
         "config": {
             "filters": [
                 {
-                    "identifiers": [
+                    "resources": [
                         "-.*"
                     ],
                     "commands": [
