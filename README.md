@@ -6,15 +6,18 @@ View [the documentation](https://github.com/Bertie2011/DataPackChecker/wiki/For-
 ## Blacklist.dll
 <details><summary><b>Core.Blacklist.Commands</b><blockquote>Certain commands are not allowed in certain functions.</blockquote></summary>
 Some commands are not allowed in some functions. Each command will be tested with a filter.<br><br>
-A filter consists of a list of regular expressions that are matched against the functions/tags that reference the command in order. An identifier follows the pattern '{namespace}:{path}/{name}', where tags are prefixed with #. Expressions must also be prefixed by + (allow) or - (check commands). If none of the referencing functions/tags match any of the identifier regexes, the next filter is considered.<br><br>
-When a command has a referencing function/tag with a negative (prefixed with -) match, the command is matched against another list of regular expressions. This happens in similar fashion, meaning that each expression is matched in order and must be prefixed by + (allow) or - (disallow). If none of the command regexes match, the next filter is considered.<br><br>
-If none of the filters give a double negative match (for location of referencing tags/functions and the command itself), the command is allowed.
+A filter consists of multiple lists, one for resource location ([#]{namespace}:[path/]{name}) and one for commands. Each list contains regular expressions and the first match determines the verdict based on a + (allow) or - (disallow) prefix.<br><br>
+If there is a referencing function/tag of which the first match in the 'resources' list is prefixed with - AND the first match in the 'commands' list is prefixed with -, the command is disallowed.
+Each command will produce an error for each of the filters with a double negative match.
+</details>
+<details><summary><b>Core.Blacklist.Identifier</b><blockquote>Certain identifiers are not allowed in certain functions.</blockquote></summary>
+Some identifiers of in-game resources are not allowed in some functions. Each identifier (e.g. an objective name) will be tested with a filter.<br><br>
+A filter consists of multiple lists, one for resource location ([#]{namespace}:[path/]{name}), one for namespaced identifiers and one for plain identifiers. Each list contains regular expressions and the first match determines the verdict based on a + (allow) or - (disallow) prefix.<br><br>
+If there is a referencing function/tag of which the first match in the 'resources' list is prefixed with - AND the first match in the 'namespace'/'plain' list is prefixed with -, the identifier is disallowed.<br><br>
+Each identifier will produce an error for each of the filters with a double negative match.
 </details>
 <details><summary><b>Core.Blacklist.ResourceLocation</b><blockquote>Certain resource locations are blacklisted.</blockquote></summary>
 Some resource locations are blacklisted. Each resource file path (starting with 'data/') is matched against a list of regular expressions until one matches. Based on a +/- prefix, the file will be allowed or disallowed. If none of the expressions match, the location is allowed. Use [^/]+ to allow any path element.
-</details>
-<details><summary><b>Core.Blacklist.Identifier</b><blockquote>Some in-game resource identifiers are not allowed to be used.</blockquote></summary>
-Not all identifiers of in-game resources like scoreboard objectives are allowed to be used in resource modifying commands. Based on identifier type, the 'namespaced' or 'plain' list is consulted from the configuration. Each list contains regular expressions, prefixed with + (allow) or - (disallow). A decision is made based on the first matching regex and if no match is found the identifier is allowed.
 </details>
 
 ## Compatibility.dll
