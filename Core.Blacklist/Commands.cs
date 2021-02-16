@@ -23,9 +23,9 @@ namespace Core.Blacklist {
 
         public override string Description => @"Some commands are not allowed in some functions. Each command will be tested with a filter.
 
-A filter consists of multiple lists, one for resource location ([#]<namespace>:[path/]name) and one for commands. Each list contains regular expressions and the first match determines the verdict based on a + (allow) or - (disallow) prefix.
+A filter consists of multiple lists, one for resource location ([#]<namespace>:[path/]<name>) and one for commands. Each list contains regular expressions and the first match determines the verdict based on a + (allow) or - (disallow) prefix.
 
-If there is a referencing function/tag of which the first match in the 'resources' list is prefixed with - AND the first match in the 'commands' list is prefixed with -, the command is disallowed.
+If the first match in the 'resources' list (matching any referencing function/tag) is prefixed with - AND the first match in the 'commands' list is prefixed with -, the command is disallowed.
 Each command will produce an error for each of the filters with a double negative match.";
 
         public override List<string> GoodExamples => new List<string>() { @"{
@@ -95,26 +95,22 @@ my_namespace:my_function - execute as @a at @s if block ~ ~-1 ~ air run ban @s[t
         }
 
         private bool TryGetNegativeResourceMatch(Filter filter, HashSet<string> references, out string identifier) {
-            identifier = default;
-            foreach (var reference in references) {
-                foreach (var check in filter.ResourceChecks) {
+            foreach (var check in filter.ResourceChecks) {
+                foreach (var reference in references) {
                     if (check.Regex.IsMatch(reference)) {
-                        if (!check.Allow) {
-                            identifier = reference;
-                            return true;
-                        }
-                        break;
+                        identifier = reference;
+                        return !check.Allow;
                     }
                 }
             }
+            identifier = default;
             return false;
         }
 
         private bool HasNegativeCommandMatch(Filter filter, Command command) {
             foreach (var check in filter.CommandChecks) {
                 if (check.Regex.IsMatch(command.Raw)) {
-                    if (!check.Allow) return true;
-                    break;
+                    return !check.Allow;
                 }
             }
             return false;

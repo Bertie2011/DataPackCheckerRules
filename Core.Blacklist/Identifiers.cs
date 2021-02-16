@@ -15,14 +15,27 @@ namespace Core.Blacklist {
     /// Written by Bertie2011
     /// </summary>
     public class Identifiers : CheckerRule {
-        private class IdentifierInfo {
-            public Command Command{ get; set; }
+        private class IdentifierLoc {
+            public Command Command { get; }
+            public string Identifier { get; }
             public bool IsNamespace { get; }
-            public HashSet<string> ReferencedBy { get; } = new HashSet<string>();
-            public IdentifierInfo(Command command, bool isNamespace) {
+            public IdentifierLoc(Command command, string identifier, bool isNamespace) {
                 Command = command;
+                Identifier = identifier;
                 IsNamespace = isNamespace;
             }
+            public override bool Equals(object obj) {
+                return obj is IdentifierLoc loc &&
+                       EqualityComparer<Command>.Default.Equals(Command, loc.Command) &&
+                       Identifier == loc.Identifier;
+            }
+
+            public override int GetHashCode() {
+                return HashCode.Combine(Command, Identifier);
+            }
+        }
+        private class IdentifierInfo {
+            public HashSet<string> ReferencedBy { get; } = new HashSet<string>();
         }
 
         private class Filter {
@@ -35,9 +48,9 @@ namespace Core.Blacklist {
 
         public override string Description => @"Some identifiers of in-game resources are not allowed in some functions. Each identifier (e.g. an objective name) will be tested with a filter.
 
-A filter consists of multiple lists, one for resource location ([#]<namespace>:[path/]name), one for namespaced identifiers and one for plain identifiers. Each list contains regular expressions and the first match determines the verdict based on a + (allow) or - (disallow) prefix.
+A filter consists of multiple lists, one for resource location ([#]<namespace>:[path/]<name>), one for namespaced identifiers and one for plain identifiers. Each list contains regular expressions and the first match determines the verdict based on a + (allow) or - (disallow) prefix.
 
-If there is a referencing function/tag of which the first match in the 'resources' list is prefixed with - AND the first match in the 'namespace'/'plain' list is prefixed with -, the identifier is disallowed.
+If the first match in the 'resources' list (matching any referencing function/tag) is prefixed with - AND the first match in the 'namespace'/'plain' list is prefixed with -, the identifier is disallowed.
 Each identifier will produce an error for each of the filters with a double negative match.
 
 Plain:
@@ -100,15 +113,15 @@ scoreboard objectives add abx_objective3 dummy" };
                 output.InvalidConfiguration<ResourceLocation>();
                 return;
             }
-            Dictionary<string, IdentifierInfo> identifiers = BuildReferencesStore(pack);
+            Dictionary<IdentifierLoc, IdentifierInfo> identifiers = BuildReferencesStore(pack);
             List<Filter> filters = BuildFilters(config);
             foreach (var identifier in identifiers) {
                 for (int i = 0; i < filters.Count; i++) {
-                    List<(Regex Regex, bool Allow)> identifierFilters = identifier.Value.IsNamespace ? filters[i].NamespacedChecks : filters[i].PlainChecks;
+                    List<(Regex Regex, bool Allow)> identifierFilters = identifier.Key.IsNamespace ? filters[i].NamespacedChecks : filters[i].PlainChecks;
                     if (TryGetNegativeResourceMatch(filters[i].ResourceChecks, identifier.Value.ReferencedBy, out string reference)
-                        && HasNegativeIdentifierMatch(identifierFilters, identifier.Key)) {
+                        && HasNegativeIdentifierMatch(identifierFilters, identifier.Key.Identifier)) {
                         var type = reference.StartsWith('#') ? "tag" : "function";
-                        output.Error(identifier.Value.Command, $"The identifier {identifier.Key} is blacklisted by filter {i + 1} when referenced by {type} '{reference}'");
+                        output.Error(identifier.Key.Command, $"The identifier {identifier.Key.Identifier} is blacklisted by filter {i + 1} when referenced by {type} '{reference}'");
                     }
                 }
             }
@@ -143,8 +156,8 @@ scoreboard objectives add abx_objective3 dummy" };
             return result;
         }
 
-        private Dictionary<string, IdentifierInfo> BuildReferencesStore(DataPack pack) {
-            Dictionary<string, IdentifierInfo> identifiers = new Dictionary<string, IdentifierInfo>();
+        private Dictionary<IdentifierLoc, IdentifierInfo> BuildReferencesStore(DataPack pack) {
+            Dictionary<IdentifierLoc, IdentifierInfo> identifiers = new Dictionary<IdentifierLoc, IdentifierInfo>();
 
             foreach (var ns in pack.Namespaces) {
                 foreach (var f in ns.Functions) {
@@ -167,38 +180,35 @@ scoreboard objectives add abx_objective3 dummy" };
 
             return identifiers;
         }
-        private IdentifierInfo GetOrCreate(Dictionary<string, IdentifierInfo> references, Command command) {
+        private IdentifierInfo GetOrCreate(Dictionary<IdentifierLoc, IdentifierInfo> references, Command command) {
             var (identifier, isNamespace) = FindIdentifier(command);
             if (identifier == null) return null;
 
-            if (!references.TryGetValue(identifier, out IdentifierInfo result)) {
-                result = new IdentifierInfo(command, isNamespace);
-                references.Add(identifier, result);
+            IdentifierLoc key = new IdentifierLoc(command, identifier, isNamespace);
+            if (!references.TryGetValue(key, out IdentifierInfo result)) {
+                result = new IdentifierInfo();
+                references.Add(key, result);
             }
             return result;
         }
 
         private bool TryGetNegativeResourceMatch(List<(Regex Regex, bool Allow)> resourceChecks, HashSet<string> references, out string identifier) {
-            identifier = default;
-            foreach (var reference in references) {
-                foreach (var check in resourceChecks) {
+            foreach (var check in resourceChecks) {
+                foreach (var reference in references) {
                     if (check.Regex.IsMatch(reference)) {
-                        if (!check.Allow) {
-                            identifier = reference;
-                            return true;
-                        }
-                        break;
+                        identifier = reference;
+                        return !check.Allow;
                     }
                 }
             }
+            identifier = default;
             return false;
         }
 
         private bool HasNegativeIdentifierMatch(List<(Regex Regex, bool Allow)> checks, string identifier) {
             foreach (var check in checks) {
                 if (check.Regex.IsMatch(identifier)) {
-                    if (!check.Allow) return true;
-                    break;
+                    return !check.Allow;
                 }
             }
             return false;
