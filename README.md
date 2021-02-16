@@ -7,13 +7,13 @@ View [the documentation](https://github.com/Bertie2011/DataPackChecker/wiki/For-
 <details><summary><b>Core.Blacklist.Commands</b><blockquote>Certain commands are not allowed in certain functions.</blockquote></summary>
 Some commands are not allowed in some functions. Each command will be tested with a filter.<br><br>
 A filter consists of multiple lists, one for resource location ([#]{namespace}:[path/]{name}) and one for commands. Each list contains regular expressions and the first match determines the verdict based on a + (allow) or - (disallow) prefix.<br><br>
-If there is a referencing function/tag of which the first match in the 'resources' list is prefixed with - AND the first match in the 'commands' list is prefixed with -, the command is disallowed.
+If the first match in the 'resources' list (matching any referencing function/tag) is prefixed with - AND the first match in the 'commands' list is prefixed with -, the command is disallowed.
 Each command will produce an error for each of the filters with a double negative match.
 </details>
 <details><summary><b>Core.Blacklist.Identifier</b><blockquote>Certain identifiers are not allowed in certain functions.</blockquote></summary>
 Some identifiers of in-game resources are not allowed in some functions. Each identifier (e.g. an objective name) will be tested with a filter.<br><br>
 A filter consists of multiple lists, one for resource location ([#]{namespace}:[path/]{name}), one for namespaced identifiers and one for plain identifiers. Each list contains regular expressions and the first match determines the verdict based on a + (allow) or - (disallow) prefix.<br><br>
-If there is a referencing function/tag of which the first match in the 'resources' list is prefixed with - AND the first match in the 'namespace'/'plain' list is prefixed with -, the identifier is disallowed.<br><br>
+If the first match in the 'resources' list (matching any referencing function/tag) is prefixed with - AND the first match in the 'namespace'/'plain' list is prefixed with -, the identifier is disallowed.<br><br>
 Each identifier will produce an error for each of the filters with a double negative match.
 </details>
 <details><summary><b>Core.Blacklist.ResourceLocation</b><blockquote>Certain resource locations are blacklisted.</blockquote></summary>
