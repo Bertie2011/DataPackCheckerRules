@@ -10,7 +10,7 @@ A filter consists of multiple lists, one for resource location ([#]{namespace}:[
 If the first match in the 'resources' list (matching any referencing function/tag) is prefixed with - AND the first match in the 'commands' list is prefixed with -, the command is disallowed.
 Each command will produce an error for each of the filters with a double negative match.
 </details>
-<details><summary><b>Core.Blacklist.Identifier</b><blockquote>Certain identifiers are not allowed in certain functions.</blockquote></summary>
+<details><summary><b>Core.Blacklist.Identifiers</b><blockquote>Certain identifiers are not allowed in certain functions.</blockquote></summary>
 Some identifiers of in-game resources are not allowed in some functions. Each identifier (e.g. an objective name) will be tested with a filter.<br><br>
 A filter consists of multiple lists, one for resource location ([#]{namespace}:[path/]{name}), one for namespaced identifiers and one for plain identifiers. Each list contains regular expressions and the first match determines the verdict based on a + (allow) or - (disallow) prefix.<br><br>
 If the first match in the 'resources' list (matching any referencing function/tag) is prefixed with - AND the first match in the 'namespace'/'plain' list is prefixed with -, the identifier is disallowed.<br><br>
