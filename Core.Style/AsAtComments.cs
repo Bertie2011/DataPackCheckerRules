@@ -27,9 +27,9 @@ namespace Core.Style {
                     for (int i = 0; i < Math.Min(f.Commands.Count, 2); i++) {
                         var c = f.Commands[i];
                         if (c.ContentType != Command.Type.Comment) continue;
-                        if (c.Raw.StartsWith("As:", true, null) && c.Raw.Length > 4) asComment = true;
-                        else if (c.Raw.StartsWith("At:", true, null) && c.Raw.Length > 4) atComment = true;
-                        else if ((c.Raw.StartsWith("As/At:", true, null) || c.Raw.StartsWith("At/As:", true, null)) && c.Raw.Length > 7) atComment = asComment = true;
+                        if (c.Raw.StartsWith("As", true, null) && c.Raw.Length > 4) asComment = true;
+                        else if (c.Raw.StartsWith("At", true, null) && c.Raw.Length > 4) atComment = true;
+                        else if ((c.Raw.StartsWith("As/At", true, null) || c.Raw.StartsWith("At/As", true, null)) && c.Raw.Length > 7) atComment = asComment = true;
                     }
 
                     if (!asComment || !atComment) {

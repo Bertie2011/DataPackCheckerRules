@@ -2,11 +2,8 @@
 using DataPackChecker.Shared.Data;
 using DataPackChecker.Shared.Data.Resources;
 using DataPackChecker.Shared.Util;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 
 namespace Core.Uniqueness {

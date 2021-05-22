@@ -36,7 +36,7 @@ namespace Core.Style {
                         if (command.ContentType != Command.Type.Command) continue;
                         var uninstallCommand = TryUninstall(command);
                         if (uninstallCommand == null) continue;
-                        if (!uninstall.Commands.Any(c => c.Raw == uninstallCommand) && missing.Add(uninstallCommand)) {
+                        if (!uninstall.ReferencesFlat.Any(f => f.Commands.Any(c => c.Raw == uninstallCommand) && missing.Add(uninstallCommand))) {
                             output.Error(uninstall, $"Uninstall function does not contain '{uninstallCommand}' for {function.NamespacedIdentifier} line {command.Line}.");
                         }
                     }

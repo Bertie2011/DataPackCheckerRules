@@ -1,10 +1,7 @@
 ﻿using DataPackChecker.Shared;
 using DataPackChecker.Shared.Data;
 using DataPackChecker.Shared.Util;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using System.Text.Json;
 
 namespace Core.Compatibility {

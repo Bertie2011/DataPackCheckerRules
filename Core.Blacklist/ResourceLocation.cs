@@ -1,10 +1,7 @@
 ﻿using DataPackChecker.Shared;
 using DataPackChecker.Shared.Data;
-using DataPackChecker.Shared.Data.Resources;
 using DataPackChecker.Shared.Util;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
